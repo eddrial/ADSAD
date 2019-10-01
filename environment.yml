@@ -9,4 +9,4 @@ dependencies:
   - matplotlib
   - pip:
     - pytest-cov
-- coveralls
+    - coveralls
