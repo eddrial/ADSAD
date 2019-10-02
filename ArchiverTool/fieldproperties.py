@@ -6,8 +6,8 @@ Created on 11 Aug 2016
 '''
 
 import numpy as np
-from id_analyses import loadbfield as lb
-from id_analyses import fieldmanipulation as fm
+from ArchiverTool import loadbfield as lb
+from ArchiverTool import fieldmanipulation as fm
 import matplotlib.pyplot as plt
 
 def defineMachineProperties(energy = 3.0, c = 2.9911124e8, mass = 0.511e-3):

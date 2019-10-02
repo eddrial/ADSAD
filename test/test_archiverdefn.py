@@ -4,7 +4,7 @@ Created on 2 Oct 2019
 @author: oqb
 '''
 import unittest
-from id_analyses import archiverdefn as ad
+from ArchiverTool import archiverdefn as ad
 
 class Test(unittest.TestCase):
 

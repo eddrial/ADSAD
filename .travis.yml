@@ -26,7 +26,7 @@ install:
     - python setup.py install
 
 script:
-    - py.test test --cov=id_analyses
+    - py.test test --cov=ArchiverTool
 
 after_script:
     - coveralls

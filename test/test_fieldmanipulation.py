@@ -5,8 +5,8 @@ Created on 16 Jun 2016
 '''
 import unittest
 import numpy as np
-from id_analyses import loadbfield as lb
-from id_analyses import fieldmanipulation as fm
+from ArchiverTool import loadbfield as lb
+from ArchiverTool import fieldmanipulation as fm
 
 
 class Test(unittest.TestCase):
