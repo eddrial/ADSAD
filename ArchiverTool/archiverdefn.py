@@ -14,7 +14,12 @@ class archiver():
         '''
         Constructor
         '''
-        self.archivername = name
+        self.archiver_name = name
         
-        self.all_archivers = {'BESSY':'http://www.bessy.de/archiver/'}
+        self.all_archivers = {'BESSY':'http://www.bessy.de/archiver/retrieval/'}
+        
+        if self.archiver_name == 'BESSY':
+            self.archiver_address = self.all_archivers['BESSY']
+            
+        
     
