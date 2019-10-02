@@ -9,16 +9,21 @@ from ArchiverTool import archiverdefn as ad
 class Test(unittest.TestCase):
 
 
-    def testconstructor(self):
-        testarchive = ad.archiver_ed()
-        self.assertEqual(testarchive.myname, 'My_Archiver')
+    def test_ArchiveDefaultName(self):
+        testarchive = ad.archiver()
+        self.assertEqual(testarchive.archivername, 'BESSY')
         
-    def testconstructor2(self):
-        testarchive = ad.archiver_ed("My_Archiver2")
-        self.assertEqual(testarchive.myname, 'My_Archiver2')
+    def test_ArchiveChosenName(self):
+        testarchive = ad.archiver("My_Archiver2")
+        self.assertEqual(testarchive.archivername, 'My_Archiver2')
         
-    
+    def test_ArchiveExists(self):
+        testarchive = ad.archiver()
+        self.assertIsInstance(testarchive, ad.archiver)
 
+    def test_ArchiveOptions(self):
+        testarchive = ad.archiver()
+        self.assertDictContainsSubset({'BESSY':'http://www.bessy.de/archiver/'}, testarchive.all_archivers,"Archiver is not in class default list")
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
