@@ -10,11 +10,11 @@ class Test(unittest.TestCase):
 
 
     def testconstructor(self):
-        testarchive = ad.archiver_ed(self)
+        testarchive = ad.archiver_ed()
         self.assertEqual(testarchive.myname, 'My_Archiver')
         
     def testconstructor2(self):
-        testarchive = ad.archiver_ed(self)
+        testarchive = ad.archiver_ed()
         self.assertEqual(testarchive.myname, 'My_Archiver2')
         
     
