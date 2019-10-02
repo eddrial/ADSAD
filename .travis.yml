@@ -26,7 +26,8 @@ install:
     - python setup.py install
 
 script:
-    - py.test test --cov=archive1
+    - py.test test --cov=id_analyses
 
 after_script:
     - coveralls
+    
