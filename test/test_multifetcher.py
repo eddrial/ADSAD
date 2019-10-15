@@ -5,7 +5,6 @@ Created on 15 Oct 2019
 '''
 import unittest
 from ArchiverTool import multifetcher as mf
-from builtins import list
 
 
 class Test(unittest.TestCase):
@@ -34,6 +33,9 @@ class Test(unittest.TestCase):
             
     def testBinLengthSuitable(self):
         multifetcher = mf.MultiJsonFetcher()
+        self.assertIsInstance(multifetcher.bin_length, int, "Bin_Length must be an int")
+        multifetcher = mf.MultiJsonFetcher(bin_length=1.5)
+        self.assertIsInstance(multifetcher.bin_length, int, "Bin_Length must be an int")
         
         
 
