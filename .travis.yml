@@ -24,6 +24,7 @@ install:
     - conda env create --file environment.yml
     - source activate test-environment 
     - python setup.py install
+    - pip install -r requirements.txt
 
 script:
     - py.test test --cov=ArchiverTool
