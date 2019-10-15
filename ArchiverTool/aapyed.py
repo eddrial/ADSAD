@@ -2,9 +2,15 @@ from aa.js import JsonFetcher
 from datetime import datetime
 from tzlocal import get_localzone
 import matplotlib as dnp
+from ArchiverTool import multifetcher as mf
 
 tz = get_localzone()
 
+
+multifetcher = mf.MultiJsonFetcher(times=[('a','b','c')])
+
+for key in multifetcher.times:
+    print(key)
 
 ArchiverBessy = 'archiver.bessy.de'
 CurrentBessy = 'TOPUPCC:rdCur'

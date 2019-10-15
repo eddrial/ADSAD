@@ -14,7 +14,7 @@ class MultiJsonFetcher(object):
     '''
 
 
-    def __init__(self, pvs = None, times = None, bin_length = 1):
+    def __init__(self, pvs = None, times = [('a','b','c')], bin_length = 1):
         '''
         Constructor
         '''
@@ -29,4 +29,5 @@ class MultiJsonFetcher(object):
             self.times = []
         else: 
             self.times = times
+            
         self.bin_length = int(bin_length)
