@@ -15,7 +15,7 @@ class Test(unittest.TestCase):
 
     def testMultifetcherInits(self):
         multifetcher = mf.MultiJsonFetcher()
-        self.assertIsInstance(multifetcher, mf.MultiJsonFetcher())
+        self.assertIsInstance(multifetcher, mf.MultiJsonFetcher)
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
