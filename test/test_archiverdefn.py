@@ -34,7 +34,9 @@ class Test(unittest.TestCase):
     def test_ArchiveAddressBESSYisLive(self):
         testarchive = ad.archiver()
         r = requests.get(testarchive.archiver_address[:-10],timeout=3)
-        self.assertEqual(r.status_code, 200, "Archiver Address is Not Working")
+        self.assertEqual(r.status_code, 200, "BESSY Archiver Appliance Address is Not Working")
+        
+    
         
             
         
