@@ -5,6 +5,7 @@ Created on 15 Oct 2019
 '''
 import unittest
 from ArchiverTool import multifetcher as mf
+from builtins import list
 
 
 class Test(unittest.TestCase):
@@ -27,8 +28,13 @@ class Test(unittest.TestCase):
         
     def testTimesAreLength2Tuples(self):
         multifetcher = mf.MultiJsonFetcher()
-        for time in multifetcher.times:
-            self.assertIsInstance(multifetcher.times[time], tuple, "Time " + multifetcher.times[time] + " is not a tuple")
+        if multifetcher.times is list:
+            for time in multifetcher.times:
+                self.assertIsInstance(multifetcher.times[time], tuple, "Time " + multifetcher.times[time] + " is not a tuple")
+            
+    def testBinLengthSuitable(self):
+        multifetcher = mf.MultiJsonFetcher()
+        
         
 
 if __name__ == "__main__":

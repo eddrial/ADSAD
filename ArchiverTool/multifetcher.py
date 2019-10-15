@@ -18,6 +18,15 @@ class MultiJsonFetcher(object):
         '''
         Constructor
         '''
-        self.pvs = pvs
-        self.times = times
+        if pvs is None:
+            self.pvs = []
+        elif pvs is not list:
+            self.pvs = [pvs]
+        else:
+            self.pvs = pvs
+        
+        if times is None:
+            self.times = []
+        else: 
+            self.times = times
         self.bin_length = bin_length
