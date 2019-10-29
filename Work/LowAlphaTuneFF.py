@@ -31,7 +31,9 @@ if __name__ == '__main__':
     
     # set window
     
-    #
+    #find _values array point wwhere the move starts and stops
+    np.
+    #set corresponding _timestamps as start and stop
     # gather more data (tune, Box0)
     
     # fit curves
