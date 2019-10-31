@@ -20,10 +20,15 @@ if __name__ == '__main__':
     UE112Gap = 'UE112ID7R:BasePmGap.A'
     UE112Phase = 'UE112ID7R:SBasePmGap.B'
     
-    phasestart = tz.localize(datetime(2019, 10, 27, 8 , 25))
-    phaseend = tz.localize(datetime(2019, 10, 27, 8, 33))
+    tuneH = 'TUNEZR:rdH'
+    tuneV =  'TUNEZR:rdV'
+    THzbox0 = 'THZH11FD6L:BOX0'
     
-    phasemove = jfetcher_Bessy.get_values(UE112Phase, phasestart, phaseend)
+    
+    toistart = tz.localize(datetime(2019, 10, 27, 8 , 25))
+    toiend = tz.localize(datetime(2019, 10, 27, 8, 33))
+    
+    phasemove = jfetcher_Bessy.get_values(UE112Phase, toistart, toiend)
     
     #Have a quick look
     plt.plot(phasemove._timestamps, phasemove._values)
@@ -42,10 +47,25 @@ if __name__ == '__main__':
     phasemovestart = tz.localize(datetime.fromtimestamp((phasemove._timestamps[datastartindex])))
     phasemoveend = tz.localize(datetime.fromtimestamp((phasemove._timestamps[datastopindex])))
     # gather more data (tune, Box0)
+    tuneHdata =  jfetcher_Bessy.get_values(tuneH, phasemovestart, phasemoveend)
+    tuneVdata = jfetcher_Bessy.get_values(tuneV, phasemovestart, phasemoveend)
+    THzbox0data = jfetcher_Bessy.get_values(THzbox0, phasemovestart, phasemoveend)
     
+    plt.figure()
+    plt.plot(tuneHdata._timestamps, tuneHdata._values-np.mean(tuneHdata._values))
+    plt.plot(tuneVdata._timestamps, tuneVdata._values-np.mean(tuneVdata._values))
+    plt.plot(THzbox0data._timestamps, 500*(THzbox0data._values-np.mean(THzbox0data._values)))
+    
+    
+    plt.show()
     
     # fit curves
     #(VTune determine main oscillation frequency and strip it out?) Worth looking at? Or comes out in the fit wash?
+    #THz tune number remove linear fit from first to final point CAN ONLY BE DONE AFTER BOTH WAYS LOOKED AT OR LINEAR FIT FROM PREVIOUS MOTION FREE TIMES USED
+    
+    
+    plt.figure()
+    
     
     # create fixed x scale
     
@@ -55,3 +75,8 @@ if __name__ == '__main__':
     
     #point to stop for debug
     print (phasemove)
+    print (phasemovestart)
+    print (phasemoveend)
+    print (tuneHdata)
+    print (tuneVdata)
+    print (THzbox0data)
