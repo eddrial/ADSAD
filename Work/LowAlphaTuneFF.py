@@ -31,12 +31,21 @@ if __name__ == '__main__':
     
     # set window
     
-    #find _values array point wwhere the move starts and stops
-    np.
-    #set corresponding _timestamps as start and stop
+    #find _values array point wwhere the move starts and stops #can be wrapped up
+    #find the stepsize of value array
+    tmpphasediff = np.diff(phasemove._values[:,0])
+    #create a True/False array of 'real steps' i.e. above 0.1 micron. Find the first true
+    datastartindex = np.argmax(tmpphasediff>1e-4)+1
+    #find the first false after the first true
+    datastopindex = np.argmin(tmpphasediff[datastartindex:]>1e-4)+1
+    #Local Timestamps for TuneH, Tune V and Box0
+    phasemovestart = tz.localize(datetime.fromtimestamp((phasemove._timestamps[datastartindex])))
+    phasemoveend = tz.localize(datetime.fromtimestamp((phasemove._timestamps[datastopindex])))
     # gather more data (tune, Box0)
     
+    
     # fit curves
+    #(VTune determine main oscillation frequency and strip it out?) Worth looking at? Or comes out in the fit wash?
     
     # create fixed x scale
     
