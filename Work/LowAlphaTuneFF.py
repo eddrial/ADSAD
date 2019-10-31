@@ -117,10 +117,15 @@ if __name__ == '__main__':
     plt.show()
     
     # create tables
-    gapresponse = np.transpose(np.vstack((Gapfit, Htunefit, Vtunefit, THzfit)))
     #Bring fitted lines together
-    #Create inverse matrix
+    gapresponse = np.transpose(np.vstack((Gapfit, Htunefit, Vtunefit, THzfit)))
     
+    #Create inverse matrix
+    responsematrix = [[35.75,67.5, 600],[-157.3, -22.5, -22.75], [121,207.5, 190.5]]
+    invresponse = np.linalg.inv(responsematrix)
+    print(invresponse)
+    
+    print(np.dot(invresponse,np.transpose(-gapresponse[50,1:])))
     
     
     #create quadrupole array solution.
