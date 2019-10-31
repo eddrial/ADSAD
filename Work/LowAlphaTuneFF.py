@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 from aa import data, fetcher, js
 from tzlocal import get_localzone
 from datetime import datetime
+from scipy.signal import savgol_filter
+from scipy import interpolate
 
 
 if __name__ == '__main__':
@@ -60,14 +62,59 @@ if __name__ == '__main__':
     plt.show()
     
     # fit curves
+    #fit gap curve also with time
     #(VTune determine main oscillation frequency and strip it out?) Worth looking at? Or comes out in the fit wash?
     #THz tune number remove linear fit from first to final point CAN ONLY BE DONE AFTER BOTH WAYS LOOKED AT OR LINEAR FIT FROM PREVIOUS MOTION FREE TIMES USED
+    #HTune Smooth
+    smTuneHData = savgol_filter(tuneHdata._values[:,0], 5, 2)
+    #VTune Smooth
+    smTuneVData = savgol_filter(tuneVdata._values[:,0], 51, 2)
+    #THz Smooth
+    smTHzData = savgol_filter(THzbox0data._values[:,0], 151, 2)
+    
+    ###Here be fits
+    xnew = np.linspace(phasemove._timestamps[datastartindex], (phasemove._timestamps[datastopindex]), 51)
+    
+    #Htune Fit
+    #Htune = np.linspace(phasemove._timestamps[datastartindex], phasemove._timestamps[datastopindex], len(smTuneHData))
+    tckHtune = interpolate.splrep(np.linspace(phasemove._timestamps[datastartindex], phasemove._timestamps[datastopindex], len(smTuneHData)),smTuneHData, s=0.0)
+    Htunefit = interpolate.splev(xnew, tckHtune, der=0)
+    
+    plt.figure()
+    plt.plot(tuneHdata._timestamps, tuneHdata._values,tuneHdata._timestamps, smTuneHData, xnew, Htunefit)
+    #plt.plot(tuneHdata._timestamps, smTuneHData)
+    
+    plt.show()
+    
+    #Vtune Fit
+    tckVtune = interpolate.splrep(np.linspace(phasemove._timestamps[datastartindex], phasemove._timestamps[datastopindex], len(smTuneVData)),smTuneVData, s=0.0)
+    Vtunefit = interpolate.splev(xnew, tckVtune, der=0)
+    
+    plt.figure()
+    plt.plot(tuneVdata._timestamps, tuneVdata._values,tuneVdata._timestamps, smTuneVData, xnew, Vtunefit)
+    
+    plt.show()
+    
+    
+    #THz Fit   
+    tckTHz = interpolate.splrep(np.linspace(phasemove._timestamps[datastartindex], phasemove._timestamps[datastopindex], len(smTHzData)),smTHzData, s=0.0)
+    THzfit = interpolate.splev(xnew, tckTHz, der=0)    
     
     
     plt.figure()
+    plt.plot(THzbox0data._timestamps, THzbox0data._values,THzbox0data._timestamps, smTHzData,xnew, THzfit)
     
+    plt.show()
     
-    # create fixed x scale
+    #Gap Fit
+    #TODO Needs Improving
+    tckGap = interpolate.splrep(np.linspace(phasemove._timestamps[datastartindex], phasemove._timestamps[datastopindex], len(phasemove._values[datastartindex:datastopindex])),phasemove._values[datastartindex:datastopindex], s=0.0)
+    Gapfit = interpolate.splev(xnew, tckGap, der=0) 
+    
+    plt.figure()
+    plt.plot(phasemove._timestamps[datastartindex:datastopindex], phasemove._values[datastartindex:datastopindex],xnew, Gapfit)
+    
+    plt.show()
     
     # create tables
     
