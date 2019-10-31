@@ -117,6 +117,13 @@ if __name__ == '__main__':
     plt.show()
     
     # create tables
+    gapresponse = np.transpose(np.vstack((Gapfit, Htunefit, Vtunefit, THzfit)))
+    #Bring fitted lines together
+    #Create inverse matrix
+    
+    
+    
+    #create quadrupole array solution.
     
     # compare tables
     
