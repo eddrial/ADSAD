@@ -26,6 +26,9 @@ if __name__ == '__main__':
     tuneV =  'TUNEZR:rdV'
     THzbox0 = 'THZH11FD6L:BOX0'
     
+    Vtunetarget = 979.0
+    Htunetarget = 882.0
+    THztarget = 1
     
     toistart = tz.localize(datetime(2019, 10, 27, 8 , 25))
     toiend = tz.localize(datetime(2019, 10, 27, 8, 33))
@@ -42,25 +45,40 @@ if __name__ == '__main__':
     #find the stepsize of value array
     tmpphasediff = np.diff(phasemove._values[:,0])
     #create a True/False array of 'real steps' i.e. above 0.1 micron. Find the first true
-    datastartindex = np.argmax(tmpphasediff>1e-4)+1
+    datastartindex = np.argmax(tmpphasediff>1e-4)
     #find the first false after the first true
     datastopindex = np.argmin(tmpphasediff[datastartindex:]>1e-4)+1
     #Local Timestamps for TuneH, Tune V and Box0
-    phasemovestart = tz.localize(datetime.fromtimestamp((phasemove._timestamps[datastartindex])))
-    phasemoveend = tz.localize(datetime.fromtimestamp((phasemove._timestamps[datastopindex])))
+    phasemovestart = tz.localize(datetime.fromtimestamp((phasemove._timestamps[datastartindex]-1))) #start a second before
+    phasemoveend = tz.localize(datetime.fromtimestamp((phasemove._timestamps[datastopindex]+1))) #finish a second after
     # gather more data (tune, Box0)
     tuneHdata =  jfetcher_Bessy.get_values(tuneH, phasemovestart, phasemoveend)
     tuneVdata = jfetcher_Bessy.get_values(tuneV, phasemovestart, phasemoveend)
     THzbox0data = jfetcher_Bessy.get_values(THzbox0, phasemovestart, phasemoveend)
     
+    
+    
+    
+    
+    #gather data for detrending THz signal
+    THzdetrendstart = tz.localize(datetime(2019, 10, 27, 8 , 14))
+    THzdetrendend = tz.localize(datetime(2019, 10, 27, 8 , 24))
+    THztrenddata = jfetcher_Bessy.get_values(THzbox0, THzdetrendstart, THzdetrendend)
+    
+    #create linear fit
+    THztargetfit = np.polyfit(THztrenddata._timestamps, THztrenddata._values[:,0], 1)
+    print(THztargetfit)
+    THztarget = np.poly1d(THztargetfit)
+    
+    FMN = THzbox0data._values-THztarget(THzbox0data._timestamps)
+    
     plt.figure()
     plt.plot(tuneHdata._timestamps, tuneHdata._values-np.mean(tuneHdata._values))
     plt.plot(tuneVdata._timestamps, tuneVdata._values-np.mean(tuneVdata._values))
-    plt.plot(THzbox0data._timestamps, 500*(THzbox0data._values-np.mean(THzbox0data._values)))
+    plt.plot(THzbox0data._timestamps, 500*(FMN))
     
     
     plt.show()
-    
     # fit curves
     #fit gap curve also with time
     #(VTune determine main oscillation frequency and strip it out?) Worth looking at? Or comes out in the fit wash?
@@ -71,6 +89,7 @@ if __name__ == '__main__':
     smTuneVData = savgol_filter(tuneVdata._values[:,0], 51, 2)
     #THz Smooth
     smTHzData = savgol_filter(THzbox0data._values[:,0], 151, 2)
+    tmp2 = savgol_filter(FMN, 151, 2)
     
     ###Here be fits
     xnew = np.linspace(phasemove._timestamps[datastartindex], (phasemove._timestamps[datastopindex]), 51)
@@ -118,24 +137,25 @@ if __name__ == '__main__':
     
     # create tables
     #Bring fitted lines together
-    gapresponse = np.transpose(np.vstack((Gapfit, Htunefit, Vtunefit, THzfit)))
+    gapresponse = np.transpose(np.vstack((Gapfit, Htunefit-Htunetarget, Vtunefit-Vtunetarget, THzfit)))
     
     #Create inverse matrix
-    responsematrix = [[35.75,67.5, 600],[-157.3, -22.5, -22.75], [121,207.5, 190.5]]
+    responsematrix = np.transpose([[35.75,67.5, 600],[-157.3, -22.5, -22.75], [121,207.5, 190.5]])
     invresponse = np.linalg.inv(responsematrix)
+    print (np.asmatrix(responsematrix))
     print(invresponse)
     
     print(np.dot(invresponse,np.transpose(-gapresponse[50,1:])))
     
     
     #create quadrupole array solution.
+    quadoffsets = np.zeros(gapresponse.shape)
+    quadoffsets[:,1:]=np.transpose(np.dot(invresponse,np.transpose(-gapresponse[:,1:])))
     
+    #export tables in expected form..
+    
+    #make a quadrupole array solution based on existing points and linear interpolation
     # compare tables
     
     #point to stop for debug
-    print (phasemove)
-    print (phasemovestart)
-    print (phasemoveend)
-    print (tuneHdata)
-    print (tuneVdata)
-    print (THzbox0data)
+    print (quadoffsets)
