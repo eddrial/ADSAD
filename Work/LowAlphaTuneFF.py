@@ -45,11 +45,11 @@ if __name__ == '__main__':
     #find the stepsize of value array
     tmpphasediff = np.diff(phasemove._values[:,0])
     #create a True/False array of 'real steps' i.e. above 0.1 micron. Find the first true
-    datastartindex = np.argmax(tmpphasediff>1e-4)
+    datastartindex = np.argmax(tmpphasediff>1e-4)+1
     #find the first false after the first true
-    datastopindex = np.argmin(tmpphasediff[datastartindex:]>1e-4)+1
+    datastopindex = np.argmin(tmpphasediff[datastartindex:]>1e-4)+2
     #Local Timestamps for TuneH, Tune V and Box0
-    phasemovestart = tz.localize(datetime.fromtimestamp((phasemove._timestamps[datastartindex]-1))) #start a second before
+    phasemovestart = tz.localize(datetime.fromtimestamp((phasemove._timestamps[datastartindex]))) #start a second before
     phasemoveend = tz.localize(datetime.fromtimestamp((phasemove._timestamps[datastopindex]+1))) #finish a second after
     # gather more data (tune, Box0)
     tuneHdata =  jfetcher_Bessy.get_values(tuneH, phasemovestart, phasemoveend)
@@ -150,6 +150,7 @@ if __name__ == '__main__':
     
     #create quadrupole array solution.
     quadoffsets = np.zeros(gapresponse.shape)
+    quadoffsets[:,0] = gapresponse[:,0]
     quadoffsets[:,1:]=np.transpose(np.dot(invresponse,np.transpose(-gapresponse[:,1:])))
     
     #export tables in expected form..

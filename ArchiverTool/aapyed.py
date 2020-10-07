@@ -3,6 +3,7 @@ from datetime import datetime
 from tzlocal import get_localzone
 import matplotlib as dnp
 from ArchiverTool import multifetcher as mf
+import radia as rad
 
 tz = get_localzone()
 
